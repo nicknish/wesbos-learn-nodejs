@@ -1,5 +1,6 @@
-// const mongoose = require('mongoose');
-// const User = mongoose.model('User');
+const mongoose = require('mongoose');
+const promisify = require('es6-promisify');
+const User = mongoose.model('User');
 
 exports.loginForm = (req, res) => {
   res.render('login', { title: 'Login' });
@@ -7,6 +8,17 @@ exports.loginForm = (req, res) => {
 
 exports.registerForm = (req, res) => {
   res.render('register', { title: 'Register' });
+};
+
+exports.register = async (req, res, next) => {
+  const user = new User({ email: req.body.email, name: req.body.name });
+
+  // We use promisify here becuase PassportJS register isn't a promise.
+  // promisify allows us to wrap it in a promise so we can use async/await.
+  // User.register comes from Passport plugin
+  const register = promisify(User.register, User);
+  await register(user, req.body.password);
+  next();
 };
 
 exports.validateRegister = (req, res, next) => {

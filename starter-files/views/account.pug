@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  .inner
+  h2= title
+  form(action="/account" method="POST")
+    label(form="name") Name
+    input(id="name" name="name" value=user.name)
+    label(form="email") Email
+    input(id="email" name="email" value=user.email)
+    input.button(type="submit" value="Save")
